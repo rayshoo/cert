@@ -1,0 +1,8 @@
+.idea/
+gen/
+
+*.key
+*.csr
+*.ext
+*.srl
+*.crt
