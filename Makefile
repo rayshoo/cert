@@ -3,7 +3,7 @@
 OUTPUT_DIR := gen/
 
 ROOT_ENCRYPT_BIT := 4096
-ROOT_INSECURE := true
+ROOT_INSECURE := false
 ROOT_PASSPHRASE := 1234
 ROOT_CERT := root
 ROOT_DAYS := 365
@@ -13,6 +13,8 @@ ROOT_LOCALITY := Songpa-gu
 ROOT_ORGANIZATION := rayshoo
 ROOT_COMMON_NAME := dragonz.dev
 ROOT_EMAIL_ADDRESS := fire@dragonz.dev
+ROOT_PKCS12_FRIENDLY_NAME := "root dragonz.dev"
+ROOT_PKCS12_PASSPHRASE := qwfp
 
 SUB_ENCRYPT_BIT := 4096
 SUB_INSECURE := false
@@ -25,6 +27,8 @@ SUB_LOCALITY := Songpa-gu
 SUB_ORGANIZATION := rayshoo
 SUB_COMMON_NAME := localhost
 SUB_EMAIL_ADDRESS := fire@dragonz.dev
+SUB_PKCS12_FRIENDLY_NAME := server localhost
+SUB_PKCS12_PASSPHRASE := qwfp
 
 
 ca-key:
@@ -73,8 +77,12 @@ sub-crt:
 	-out ${OUTPUT_DIR}${SUB_CERT}.crt -days ${SUB_DAYS} -sha256 -passin pass:${ROOT_PASSPHRASE} -extfile ${OUTPUT_DIR}${SUB_CERT}.ext
 .PHONY:sub-crt
 
+sub-p12:
+	openssl pkcs12 -export -in ${OUTPUT_DIR}${SUB_CERT}.crt -inkey ${OUTPUT_DIR}${SUB_CERT}.key -name "${SUB_PKCS12_FRIENDLY_NAME}" -out ${OUTPUT_DIR}${SUB_CERT}.p12 -passin pass:${SUB_PASSPHRASE} -passout pass:${SUB_PKCS12_PASSPHRASE}
+.PHONY:sub-pkcs12
+
 clean:
-	rm ${OUTPUT_DIR}*.key ${OUTPUT_DIR}*.csr ${OUTPUT_DIR}*.ext ${OUTPUT_DIR}*.srl ${OUTPUT_DIR}*.crt
+	rm ${OUTPUT_DIR}*.key ${OUTPUT_DIR}*.csr ${OUTPUT_DIR}*.ext ${OUTPUT_DIR}*.srl ${OUTPUT_DIR}*.crt ${OUTPUT_DIR}*.p12
 .PHONY:clean
 
 sub: sub-key sub-csr sub-ext sub-crt
