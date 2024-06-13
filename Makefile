@@ -3,6 +3,7 @@
 OUTPUT_DIR := gen/
 
 ROOT_ENCRYPT_BIT := 4096
+ROOT_INSECURE := true
 ROOT_PASSPHRASE := 1234
 ROOT_CERT := root
 ROOT_DAYS := 365
@@ -14,8 +15,9 @@ ROOT_COMMON_NAME := dragonz.dev
 ROOT_EMAIL_ADDRESS := fire@dragonz.dev
 
 SUB_ENCRYPT_BIT := 4096
+SUB_INSECURE := false
 SUB_PASSPHRASE := arst
-SUB_CERT := client
+SUB_CERT := server
 SUB_DAYS := 365
 SUB_COUNTRY := KO
 SUB_STATE := Seoul
@@ -26,7 +28,11 @@ SUB_EMAIL_ADDRESS := fire@dragonz.dev
 
 
 ca-key:
-	openssl genrsa -aes256 -passout pass:${ROOT_PASSPHRASE} -out ${OUTPUT_DIR}${ROOT_CERT}.key ${ROOT_ENCRYPT_BIT}
+	if [ ${ROOT_INSECURE} == "true" ]; then \
+	openssl genrsa -out ${OUTPUT_DIR}${ROOT_CERT}.key ${ROOT_ENCRYPT_BIT}; \
+  else \
+	openssl genrsa -aes256 -passout pass:${ROOT_PASSPHRASE} -out ${OUTPUT_DIR}${ROOT_CERT}.key ${ROOT_ENCRYPT_BIT}; \
+	fi
 .PHONY:ca-key
 
 ca-crt:
@@ -41,7 +47,11 @@ ca-crt-with-key:
 
 
 sub-key:
-	openssl genrsa -aes256 -passout pass:${SUB_PASSPHRASE} -out ${OUTPUT_DIR}${SUB_CERT}.key ${SUB_ENCRYPT_BIT}
+	if [ ${SUB_INSECURE} == "true" ]; then \
+	openssl genrsa -out ${OUTPUT_DIR}${SUB_CERT}.key ${SUB_ENCRYPT_BIT}; \
+	else \
+	openssl genrsa -aes256 -passout pass:${SUB_PASSPHRASE} -out ${OUTPUT_DIR}${SUB_CERT}.key ${SUB_ENCRYPT_BIT}; \
+	fi
 .PHONY:sub-key
 
 sub-csr:
