@@ -94,7 +94,7 @@ sub-crt:
 
 sub-p12:
 	openssl pkcs12 -export -in ${OUTPUT_DIR}${SUB_CERT}.crt -inkey ${OUTPUT_DIR}${SUB_CERT}.key -name "${SUB_PKCS12_FRIENDLY_NAME}" -out ${OUTPUT_DIR}${SUB_CERT}.p12 -passin pass:${SUB_PASSPHRASE} -passout pass:${SUB_PKCS12_PASSPHRASE}
-.PHONY:sub-pkcs12
+.PHONY:sub-p12
 
 sub-der:
 	openssl x509 -outform der -in ${OUTPUT_DIR}${SUB_CERT}.crt -out ${OUTPUT_DIR}${SUB_CERT}.der
