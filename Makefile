@@ -116,5 +116,5 @@ ca: ca-key ca-crt
 sub: sub-key sub-csr sub-ext sub-crt
 .PHONY:sub
 
-all: ca-key ca-crt sub-key sub-csr sub-ext sub-crt
+all: ca-key ca-crt ca-txt sub-key sub-csr sub-ext sub-crt sub-txt
 .PHONY:all
